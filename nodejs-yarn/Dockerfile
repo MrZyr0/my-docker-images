@@ -2,7 +2,7 @@ FROM alpine:latest AS builder
 ENV NODE_ENV=production
 WORKDIR /app
 RUN apk update \
-	&& apk add nodejs \
+	&& apk add npm nodejs \
 	&& rm -fr /var/cache/apk/*
 COPY package*.json ./
 RUN yarn install --frozen-lockfile --non-interactive --no-progress --production --pure-lockfile
