@@ -1,13 +1,14 @@
 FROM alpine:latest AS builder
-RUN apk add --update npm nodejs-current
+ENV NODE_ENV=production
 WORKDIR /app
+RUN apk update \
+	&& apk add nodejs \
+	&& rm -fr /var/cache/apk/*
 COPY package*.json ./
-RUN npm clean-install --only=production
+RUN npm ci
 COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
 
 FROM gcr.io/distroless/nodejs:16
-COPY --from=build-env /app /app
+COPY --from=builder /app /app
 WORKDIR /app
 CMD ["index.js"]
